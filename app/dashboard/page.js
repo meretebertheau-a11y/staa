@@ -61,7 +61,7 @@ export default function Dashboard() {
         <div>
           <div className="brand">
             <div className="mark">≈</div>
-            <h1>Grønn <em>Lager</em></h1>
+            <h1>Ståa</h1>
           </div>
           <div className="tag">{t.tagline}</div>
         </div>

@@ -1,6 +1,6 @@
-# Grønn Lager
+# Ståa
 
-Real Next.js version of the Grønn Lager prototype: photo/receipt intake with AI-assisted
+Real Next.js version of the Ståa prototype: photo/receipt intake with AI-assisted
 field extraction, an inventory list, and an analytics dashboard — backed by Supabase
 (real accounts, real database, real photo storage) instead of browser-only storage.
 

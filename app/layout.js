@@ -15,7 +15,7 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export const metadata = {
-  title: 'Grønn Lager',
+  title: 'Ståa',
   description: 'Lagerstyring for vintagebutikker'
 };
 

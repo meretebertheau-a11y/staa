@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="login-wrap">
       <div className="login-card">
         <div className="mark">≈</div>
-        <h1>Grønn <em>Lager</em></h1>
+        <h1>Ståa</h1>
         <div className="sub">Lagerstyring for vintage</div>
 
         <form onSubmit={handleSubmit}>
