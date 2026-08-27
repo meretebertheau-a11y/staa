@@ -29,9 +29,9 @@ html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--fo
 .app{max-width:1400px;margin:0 auto;padding:28px 32px 80px;}
 @media(max-width:760px){.app{padding:20px 16px 48px;}}
 
-.desktop-only{display:block;}
-.mobile-only{display:none;}
-@media(max-width:760px){.desktop-only{display:none !important;}.mobile-only{display:block !important;}}
+.desktop-only{display:block !important;}
+.mobile-only{display:none !important;}
+@media(max-width:760px){.desktop-only{display:none !important;}.mobile-only{display:flex !important;}}
 
 /* ---------- header ---------- */
 .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:14px;}
