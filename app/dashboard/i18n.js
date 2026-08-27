@@ -160,7 +160,7 @@ export function resizeImage(file, maxW) {
 }
 
 export function emptyDraft() {
-  return { name: '', category: CATEGORIES[0], brand: '', size: '', color: '', buyPrice: 0, vat: 0, expenses: 0, potentialSalePrice: 0, dateBought: todayISO() };
+  return { name: '', category: CATEGORIES[0], brand: '', size: '', color: '', buyPrice: '', vat: '', expenses: '', potentialSalePrice: '', dateBought: todayISO() };
 }
 
 export function normalizeCategory(val) {

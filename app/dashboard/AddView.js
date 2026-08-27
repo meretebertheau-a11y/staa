@@ -35,7 +35,12 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      setDraft(d => ({ ...d, ...data, category: normalizeCategory(data.category) }));
+      setDraft(d => ({
+        ...d, ...data,
+        category: normalizeCategory(data.category),
+        buyPrice: data.buyPrice ? String(data.buyPrice) : '',
+        vat: data.vat ? String(data.vat) : ''
+      }));
       setAiFilled(true);
     } catch (e) {
       setError(t.couldNotReadData);
@@ -78,10 +83,10 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
       brand: draft.brand,
       size: draft.size,
       color: draft.color,
-      buy_price: draft.buyPrice,
-      vat: draft.vat,
-      expenses: draft.expenses,
-      potential_sale_price: draft.potentialSalePrice,
+      buy_price: parseFloat(draft.buyPrice) || 0,
+      vat: parseFloat(draft.vat) || 0,
+      expenses: parseFloat(draft.expenses) || 0,
+      potential_sale_price: parseFloat(draft.potentialSalePrice) || 0,
       date_bought: draft.dateBought,
       status: 'available',
       photo_url: photoUrl
@@ -148,10 +153,10 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
           <div className="field"><label>{t.fBrand}</label><input value={draft.brand} onChange={e => setDraft({ ...draft, brand: e.target.value })} /></div>
           <div className="field"><label>{t.fSize}</label><input value={draft.size} onChange={e => setDraft({ ...draft, size: e.target.value })} /></div>
           <div className="field"><label>{t.fColor}</label><input value={draft.color} onChange={e => setDraft({ ...draft, color: e.target.value })} /></div>
-          <div className="field"><label>{t.fCost}</label><input type="number" value={draft.buyPrice} onChange={e => setDraft({ ...draft, buyPrice: parseFloat(e.target.value) || 0 })} /></div>
-          <div className="field"><label>{t.fMargin}</label><input type="number" value={draft.vat} onChange={e => setDraft({ ...draft, vat: parseFloat(e.target.value) || 0 })} /></div>
-          <div className="field"><label>{t.fExpenses}</label><input type="number" value={draft.expenses} onChange={e => setDraft({ ...draft, expenses: parseFloat(e.target.value) || 0 })} /></div>
-          <div className="field"><label>{t.fPotentialSale}</label><input type="number" value={draft.potentialSalePrice} onChange={e => setDraft({ ...draft, potentialSalePrice: parseFloat(e.target.value) || 0 })} /></div>
+          <div className="field"><label>{t.fCost}</label><input type="number" placeholder="0" value={draft.buyPrice} onChange={e => setDraft({ ...draft, buyPrice: e.target.value })} /></div>
+          <div className="field"><label>{t.fMargin}</label><input type="number" placeholder="0" value={draft.vat} onChange={e => setDraft({ ...draft, vat: e.target.value })} /></div>
+          <div className="field"><label>{t.fExpenses}</label><input type="number" placeholder="0" value={draft.expenses} onChange={e => setDraft({ ...draft, expenses: e.target.value })} /></div>
+          <div className="field"><label>{t.fPotentialSale}</label><input type="number" placeholder="0" value={draft.potentialSalePrice} onChange={e => setDraft({ ...draft, potentialSalePrice: e.target.value })} /></div>
           <div className="field"><label>{t.fDate}</label><input type="date" value={draft.dateBought} onChange={e => setDraft({ ...draft, dateBought: e.target.value })} /></div>
         </div>
         <button className="btn btn-dark" onClick={save} disabled={saving}>{saving ? t.saving : t.saveBtn}</button>
@@ -198,6 +203,13 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
       name: i.name, brand: i.brand, size: i.size, buyPrice: i.buy_price, dateBought: i.date_bought
     })));
     const seenBatch = new Set();
+    const numField = (row, col) => {
+      if (!col) return '';
+      const raw = row[col];
+      if (raw === '' || raw == null) return '';
+      const n = parseFloat(raw);
+      return isNaN(n) ? '' : n;
+    };
     const built = rawRows.map(row => {
       const d = {
         name: mapping.name ? String(row[mapping.name] || '') : '',
@@ -205,10 +217,10 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
         brand: mapping.brand ? String(row[mapping.brand] || '') : '',
         size: mapping.size ? String(row[mapping.size] || '') : '',
         color: mapping.color ? String(row[mapping.color] || '') : '',
-        buyPrice: mapping.buyPrice ? (parseFloat(row[mapping.buyPrice]) || 0) : 0,
-        vat: mapping.vat ? (parseFloat(row[mapping.vat]) || 0) : 0,
-        expenses: mapping.expenses ? (parseFloat(row[mapping.expenses]) || 0) : 0,
-        potentialSalePrice: mapping.potentialSalePrice ? (parseFloat(row[mapping.potentialSalePrice]) || 0) : 0,
+        buyPrice: numField(row, mapping.buyPrice),
+        vat: numField(row, mapping.vat),
+        expenses: numField(row, mapping.expenses),
+        potentialSalePrice: numField(row, mapping.potentialSalePrice),
         dateBought: mapping.dateBought ? normalizeDate(row[mapping.dateBought]) : todayISO()
       };
       const key = makeKey(d);
@@ -247,10 +259,10 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
       brand: d.brand,
       size: d.size,
       color: d.color,
-      buy_price: d.buyPrice,
-      vat: d.vat,
-      expenses: d.expenses,
-      potential_sale_price: d.potentialSalePrice,
+      buy_price: parseFloat(d.buyPrice) || 0,
+      vat: parseFloat(d.vat) || 0,
+      expenses: parseFloat(d.expenses) || 0,
+      potential_sale_price: parseFloat(d.potentialSalePrice) || 0,
       date_bought: d.dateBought,
       status: 'available'
     }));
@@ -331,10 +343,10 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
                 <td><input value={d.brand} onChange={e => updateDraft(idx, 'brand', e.target.value)} style={{ width: 90 }} /></td>
                 <td><input value={d.size} onChange={e => updateDraft(idx, 'size', e.target.value)} style={{ width: 60 }} /></td>
                 <td><input value={d.color} onChange={e => updateDraft(idx, 'color', e.target.value)} style={{ width: 80 }} /></td>
-                <td><input type="number" value={d.buyPrice} onChange={e => updateDraft(idx, 'buyPrice', parseFloat(e.target.value) || 0)} style={{ width: 80 }} /></td>
-                <td><input type="number" value={d.vat} onChange={e => updateDraft(idx, 'vat', parseFloat(e.target.value) || 0)} style={{ width: 70 }} /></td>
-                <td><input type="number" value={d.expenses} onChange={e => updateDraft(idx, 'expenses', parseFloat(e.target.value) || 0)} style={{ width: 70 }} /></td>
-                <td><input type="number" value={d.potentialSalePrice} onChange={e => updateDraft(idx, 'potentialSalePrice', parseFloat(e.target.value) || 0)} style={{ width: 80 }} /></td>
+                <td><input type="number" placeholder="0" value={d.buyPrice} onChange={e => updateDraft(idx, 'buyPrice', e.target.value)} style={{ width: 80 }} /></td>
+                <td><input type="number" placeholder="0" value={d.vat} onChange={e => updateDraft(idx, 'vat', e.target.value)} style={{ width: 70 }} /></td>
+                <td><input type="number" placeholder="0" value={d.expenses} onChange={e => updateDraft(idx, 'expenses', e.target.value)} style={{ width: 70 }} /></td>
+                <td><input type="number" placeholder="0" value={d.potentialSalePrice} onChange={e => updateDraft(idx, 'potentialSalePrice', e.target.value)} style={{ width: 80 }} /></td>
                 <td><input type="date" value={d.dateBought} onChange={e => updateDraft(idx, 'dateBought', e.target.value)} /></td>
                 <td>{d._dup === 'existing' && <span className="badge badge-open">{t.existsInStock}</span>}
                     {d._dup === 'batch' && <span className="badge badge-open">{t.dupInFile}</span>}</td>

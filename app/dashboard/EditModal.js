@@ -12,12 +12,12 @@ export default function EditModal({ item, lang, supabase, onClose, onSaved }) {
     color: item.color || '',
     brand: item.brand || '',
     size: item.size || '',
-    cost: String(item.buy_price ?? 0),
-    vat: String(item.vat ?? 0),
-    expenses: String(item.expenses ?? 0),
-    potentialSalePrice: String(item.potential_sale_price ?? 0),
+    cost: item.buy_price ? String(item.buy_price) : '',
+    vat: item.vat ? String(item.vat) : '',
+    expenses: item.expenses ? String(item.expenses) : '',
+    potentialSalePrice: item.potential_sale_price ? String(item.potential_sale_price) : '',
     status: item.status,
-    sale: item.sold_price != null ? String(item.sold_price) : ''
+    sale: item.sold_price ? String(item.sold_price) : ''
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -84,16 +84,16 @@ export default function EditModal({ item, lang, supabase, onClose, onSaved }) {
             <input value={draft.size} onChange={e => set('size', e.target.value)} />
           </div>
           <div className="modal-field"><label>{t.fCost}</label>
-            <input type="number" value={draft.cost} onChange={e => set('cost', e.target.value)} />
+            <input type="number" placeholder="0" value={draft.cost} onChange={e => set('cost', e.target.value)} />
           </div>
           <div className="modal-field"><label>{t.fMargin}</label>
-            <input type="number" value={draft.vat} onChange={e => set('vat', e.target.value)} />
+            <input type="number" placeholder="0" value={draft.vat} onChange={e => set('vat', e.target.value)} />
           </div>
           <div className="modal-field"><label>{t.fExpenses}</label>
-            <input type="number" value={draft.expenses} onChange={e => set('expenses', e.target.value)} />
+            <input type="number" placeholder="0" value={draft.expenses} onChange={e => set('expenses', e.target.value)} />
           </div>
           <div className="modal-field"><label>{t.fPotentialSale}</label>
-            <input type="number" value={draft.potentialSalePrice} onChange={e => set('potentialSalePrice', e.target.value)} />
+            <input type="number" placeholder="0" value={draft.potentialSalePrice} onChange={e => set('potentialSalePrice', e.target.value)} />
           </div>
           <div className="modal-field"><label>{t.fStatus}</label>
             <select value={draft.status} onChange={e => set('status', e.target.value)}>
@@ -102,7 +102,7 @@ export default function EditModal({ item, lang, supabase, onClose, onSaved }) {
             </select>
           </div>
           <div className="modal-field"><label>{t.fSale}</label>
-            <input type="number" value={draft.sale} onChange={e => set('sale', e.target.value)} disabled={draft.status !== 'sold'} />
+            <input type="number" placeholder="0" value={draft.sale} onChange={e => set('sale', e.target.value)} disabled={draft.status !== 'sold'} />
           </div>
         </div>
 
