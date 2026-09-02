@@ -90,12 +90,17 @@ html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--fo
 @media(max-width:760px){.grid2{grid-template-columns:1fr;}}
 
 /* ---------- add / composer ---------- */
-.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;border:2px solid rgba(255,255,255,0.16);border-radius:calc(var(--radius) - 1px);padding:22px;text-align:center;cursor:pointer;background:var(--card);}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;border:2px solid rgba(255,255,255,0.16);border-radius:calc(var(--radius) - 1px);padding:22px;text-align:center;cursor:pointer;background:var(--card);}
 .drop img{max-width:100%;max-height:110px;border-radius:calc(var(--radius) - 4px);margin-bottom:8px;}
 .drop .hint{font-size:11px;font-weight:600;letter-spacing:1px;opacity:.55;text-transform:uppercase;color:var(--navy);}
 .ai-badge{display:inline-block;font-size:9px;letter-spacing:1px;background:var(--potential-bg);color:var(--potential-fg);padding:2px 8px;border-radius:10px;margin-left:8px;text-transform:uppercase;font-weight:700;}
+.composer-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:20px;}
 .chip-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
 .chip-outline{border:1px solid rgba(255,255,255,.26);background:transparent;color:rgba(255,255,255,.86);border-radius:999px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;}
+.chip-outline.chip-filled{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.44);color:#fff;}
+.btn-ai{flex:none;background:#AEBCF0;color:#1E2B4E;border:none;border-radius:999px;padding:16px 28px;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
+.btn-ai:hover{filter:brightness(.96);}
+.btn-ai:disabled{opacity:.6;cursor:default;}
 .divider-label{text-align:center;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--label);text-transform:uppercase;margin:0 0 22px;}
 .file-chip{display:flex;align-items:center;gap:9px;background:var(--cream-card);border:1px solid var(--line-soft);border-radius:9px;padding:6px 8px 6px 6px;max-width:230px;}
 .file-chip .thumb-sm{width:32px;height:32px;border-radius:6px;flex:none;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--white);background-color:var(--navy);}

@@ -109,31 +109,21 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
         <div className="label" style={{ color: 'rgba(255,255,255,.6)' }}>{t.addTitle}</div>
         <div style={{ fontSize: 14, lineHeight: 1.55, color: 'rgba(255,255,255,.6)', marginBottom: 22 }}>{t.addSubtitle}</div>
 
-        <div className="grid2">
-          <div>
-            <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.addPhotoLabel}</div>
-            <label className="drop">
-              {itemPhoto ? <img src={itemPhoto} alt="" /> : <div className="hint">{t.addPhotoHint}</div>}
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
-            </label>
-          </div>
-          <div>
-            <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.addReceiptLabel}</div>
-            <label className="drop">
-              {receiptPhoto ? <img src={receiptPhoto} alt="" /> : <div className="hint">{t.addReceiptHint}</div>}
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickReceipt} />
-            </label>
-          </div>
-        </div>
-        <button className="btn" onClick={analyze} disabled={aiLoading} style={{ marginTop: 20 }}>
-          {aiLoading ? t.analyzing : t.analyzeAI}
-        </button>
+        <label className="drop">
+          {itemPhoto ? <img src={itemPhoto} alt="" /> : <div className="hint">{t.addDropHint}</div>}
+          <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
+        </label>
         {error && <div className="msg msg-error">{error}</div>}
 
-        <div className="chip-row">
-          <button className="chip-outline" onClick={() => document.getElementById('gl-item-file')?.click()}>{t.chipPhoto}</button>
-          <button className="chip-outline" onClick={() => document.getElementById('gl-receipt-file')?.click()}>{t.chipReceipt}</button>
-          <button className="chip-outline" onClick={onSwitchToBulk}>{t.chipBulk}</button>
+        <div className="composer-actions">
+          <div className="chip-row" style={{ margin: 0 }}>
+            <button className="chip-outline" onClick={() => document.getElementById('gl-item-file')?.click()}>{t.chipPhoto}</button>
+            <button className={`chip-outline${receiptPhoto ? ' chip-filled' : ''}`} onClick={() => document.getElementById('gl-receipt-file')?.click()}>{t.chipReceipt}</button>
+            <button className="chip-outline" onClick={onSwitchToBulk}>{t.chipBulk}</button>
+          </div>
+          <button className="btn-ai" onClick={analyze} disabled={aiLoading}>
+            {aiLoading ? t.analyzing : t.analyzeAI}
+          </button>
         </div>
         <input id="gl-item-file" type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
         <input id="gl-receipt-file" type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickReceipt} />
