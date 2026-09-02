@@ -7,7 +7,16 @@ import {
   normalizeCategory, normalizeDate, fieldLabels, guessMapping, makeKey
 } from './i18n';
 
-export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
+function ModeToggle({ t, addMode, setAddMode }) {
+  return (
+    <div className="nav-pill" style={{ marginBottom: 22 }}>
+      <button className={addMode === 'single' ? 'active' : ''} onClick={() => setAddMode('single')}>{t.subSingle}</button>
+      <button className={addMode === 'bulk' ? 'active' : ''} onClick={() => setAddMode('bulk')}>{t.subBulk}</button>
+    </div>
+  );
+}
+
+export function SingleAddView({ supabase, lang, addMode, setAddMode, onSaved, onSwitchToBulk }) {
   const t = T[lang];
   const [itemPhoto, setItemPhoto] = useState(null);
   const [receiptPhoto, setReceiptPhoto] = useState(null);
@@ -106,6 +115,7 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
   return (
     <>
       <div className="card card-navy">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label" style={{ color: 'rgba(255,255,255,.6)' }}>{t.addTitle}</div>
         <div style={{ fontSize: 14, lineHeight: 1.55, color: 'rgba(255,255,255,.6)', marginBottom: 22 }}>{t.addSubtitle}</div>
 
@@ -155,7 +165,7 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
   );
 }
 
-export function BulkImportView({ supabase, lang, user, items, onSaved }) {
+export function BulkImportView({ supabase, lang, user, items, addMode, setAddMode, onSaved }) {
   const t = T[lang];
   const FIELD_LABELS = fieldLabels(t);
   const [step, setStep] = useState('upload');
@@ -265,6 +275,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
   if (step === 'upload') {
     return (
       <div className="card card-navy">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.bulkTitle}</div>
         <label className="drop">
           <div className="hint">{fileName || t.bulkHint}</div>
@@ -281,6 +292,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
   if (step === 'map') {
     return (
       <div className="card card-white">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label">{t.matchColumns(fileName)}</div>
         <div className="grid2">
           {Object.keys(FIELD_LABELS).map(field => (
@@ -306,6 +318,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
 
   return (
     <div className="card card-white">
+      <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
       <div className="label">{t.checkAndEdit(includedCount, draftItems.length)}</div>
       {dupCount > 0 && (
         <div className="msg" style={{ background: 'var(--cream-card)', padding: '10px 14px', borderRadius: 10, marginBottom: 12 }}>
