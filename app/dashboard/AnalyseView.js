@@ -84,13 +84,16 @@ export default function AnalyseView({ items, lang, onViewOverdue }) {
 
   /* ---- inventory summary ---- */
   const invData = useMemo(() => {
+    const invTotalVal = available.reduce((s, i) => s + (i.buy_price || 0), 0);
     const breakdown = CATEGORIES.map(c => ({
       cat: c,
       count: available.filter(i => i.category === c).length,
       value: available.filter(i => i.category === c).reduce((s, i) => s + (i.buy_price || 0), 0),
-    })).filter(b => b.count > 0);
+    })).filter(b => b.count > 0).map(b => ({
+      ...b,
+      pctOfValue: invTotalVal ? ((b.value / invTotalVal) * 100).toFixed(1) : '0.0',
+    }));
     const invCount = available.length;
-    const invTotalVal = available.reduce((s, i) => s + (i.buy_price || 0), 0);
 
     const now = new Date();
     const yStart = periodRanges(now).year;
@@ -129,6 +132,40 @@ export default function AnalyseView({ items, lang, onViewOverdue }) {
 
   return (
     <>
+      <div className="section-title">{t.invTitle}</div>
+      <div className="inv-grid">
+        <div className="inv-totals-card">
+          <div>
+            <div className="label">{t.totalInv}</div>
+            <div className="big-num serif">{fmtKr(invData.invTotalVal)}</div>
+            <div className="inv-count-text">{t.itemsLabel(invData.invCount)}</div>
+          </div>
+          <div className="pie-row">
+            <div className="pie-chart" style={{ background: invData.pieBg }} />
+            <div className="pie-legend">
+              {invData.breakdown.map(b => (
+                <div className="pie-legend-item" key={b.cat}>
+                  <span className="pie-legend-swatch" style={{ background: CATEGORY_COLORS[b.cat] }} />
+                  <span className="pie-legend-label">{catLabel(b.cat, lang)}</span>
+                  <span className="pie-legend-pct">{b.pctOfValue}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="side-cards">
+          <div className="side-card card-potential">
+            <div className="label" style={{ color: 'var(--potential-fg)' }}>{t.potProfit}</div>
+            <div className="big-num serif">{fmtKr(invData.potentialProfit)}</div>
+            <div className="side-card-caption" style={{ color: 'var(--potential-fg)' }}>{t.potProfitFormula}</div>
+          </div>
+          <div className="side-card card-white">
+            <div className="label">{t.markup}</div>
+            <div className="big-num serif">{markupFactorText} x</div>
+          </div>
+        </div>
+      </div>
+
       <div className="stat-row">
         {statCards.map(s => (
           <div className="stat-card" key={s.label}>
@@ -196,39 +233,6 @@ export default function AnalyseView({ items, lang, onViewOverdue }) {
           ))}
         </div>
         <div className="profit-formula">{t.profitFormula}</div>
-      </div>
-
-      <div className="section-title">{t.invTitle}</div>
-      <div className="inv-grid">
-        <div className="inv-totals-card">
-          <div>
-            <div className="label">{t.totalInv}</div>
-            <div className="big-num serif">{fmtKr(invData.invTotalVal)}</div>
-            <div className="inv-count-text">{t.itemsLabel(invData.invCount)}</div>
-          </div>
-          <div className="pie-row">
-            <div className="pie-chart" style={{ background: invData.pieBg }} />
-            <div className="pie-legend">
-              {invData.breakdown.map(b => (
-                <div className="pie-legend-item" key={b.cat}>
-                  <span className="pie-legend-swatch" style={{ background: CATEGORY_COLORS[b.cat] }} />
-                  <span className="pie-legend-label">{catLabel(b.cat, lang)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="side-cards">
-          <div className="side-card card-potential">
-            <div className="label" style={{ color: 'var(--potential-fg)' }}>{t.potProfit}</div>
-            <div className="big-num serif">{fmtKr(invData.potentialProfit)}</div>
-            <div className="side-card-caption" style={{ color: 'var(--potential-fg)' }}>{t.potProfitFormula}</div>
-          </div>
-          <div className="side-card card-white">
-            <div className="label">{t.markup}</div>
-            <div className="big-num serif">{markupFactorText} x</div>
-          </div>
-        </div>
       </div>
 
       <div className="section-title">{t.turnTitle}</div>

@@ -1,8 +1,9 @@
 export const CATEGORIES = ['Jakker', 'Bukser', 'Skjørt/Kjoler', 'Topper/Skjorter', 'Sko', 'Vesker', 'Tilbehør'];
 export const CATEGORIES_EN = ['Jackets', 'Pants', 'Skirts/Dresses', 'Tops/Shirts', 'Shoes', 'Bags', 'Accessories'];
+// Shades of the brand blue #0000FF (same hue/saturation, varying lightness only)
 export const CATEGORY_COLORS = {
-  'Jakker': '#C5D6A0', 'Bukser': '#F2DD97', 'Skjørt/Kjoler': '#E6B3AD',
-  'Topper/Skjorter': '#BCC8F0', 'Sko': '#EFE4C4', 'Vesker': '#A9C6B4', 'Tilbehør': '#D8C7E2'
+  'Jakker': '#B3B3FF', 'Bukser': '#7070FF', 'Skjørt/Kjoler': '#3333FF',
+  'Topper/Skjorter': '#0000FF', 'Sko': '#0000CC', 'Vesker': '#000099', 'Tilbehør': '#000066'
 };
 
 export function catLabel(cat, lang) {
