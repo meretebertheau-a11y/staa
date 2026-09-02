@@ -93,13 +93,9 @@ export default function Dashboard() {
       )}
       {view === 'add' && (
         <>
-          <div className="nav-pill" style={{ marginBottom: 16 }}>
-            <button className={addMode === 'single' ? 'active' : ''} onClick={() => setAddMode('single')}>{t.subSingle}</button>
-            <button className={addMode === 'bulk' ? 'active' : ''} onClick={() => setAddMode('bulk')}>{t.subBulk}</button>
-          </div>
           {addMode === 'single'
-            ? <SingleAddView supabase={supabase} lang={lang} onSaved={() => { loadItems(); setView('lager'); }} onSwitchToBulk={() => setAddMode('bulk')} />
-            : <BulkImportView supabase={supabase} lang={lang} user={user} items={items} onSaved={() => { loadItems(); setView('lager'); }} />}
+            ? <SingleAddView supabase={supabase} lang={lang} addMode={addMode} setAddMode={setAddMode} onSaved={() => { loadItems(); setView('lager'); }} onSwitchToBulk={() => setAddMode('bulk')} />
+            : <BulkImportView supabase={supabase} lang={lang} user={user} items={items} addMode={addMode} setAddMode={setAddMode} onSaved={() => { loadItems(); setView('lager'); }} />}
         </>
       )}
       {view === 'analyse' && <AnalyseView items={items} lang={lang} onViewOverdue={viewOverdueInventory} />}

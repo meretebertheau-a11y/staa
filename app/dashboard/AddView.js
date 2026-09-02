@@ -7,7 +7,16 @@ import {
   normalizeCategory, normalizeDate, fieldLabels, guessMapping, makeKey
 } from './i18n';
 
-export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
+function ModeToggle({ t, addMode, setAddMode }) {
+  return (
+    <div className="nav-pill" style={{ marginBottom: 22 }}>
+      <button className={addMode === 'single' ? 'active' : ''} onClick={() => setAddMode('single')}>{t.subSingle}</button>
+      <button className={addMode === 'bulk' ? 'active' : ''} onClick={() => setAddMode('bulk')}>{t.subBulk}</button>
+    </div>
+  );
+}
+
+export function SingleAddView({ supabase, lang, addMode, setAddMode, onSaved, onSwitchToBulk }) {
   const t = T[lang];
   const [itemPhoto, setItemPhoto] = useState(null);
   const [receiptPhoto, setReceiptPhoto] = useState(null);
@@ -106,34 +115,25 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
   return (
     <>
       <div className="card card-navy">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label" style={{ color: 'rgba(255,255,255,.6)' }}>{t.addTitle}</div>
         <div style={{ fontSize: 14, lineHeight: 1.55, color: 'rgba(255,255,255,.6)', marginBottom: 22 }}>{t.addSubtitle}</div>
 
-        <div className="grid2">
-          <div>
-            <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.addPhotoLabel}</div>
-            <label className="drop">
-              {itemPhoto ? <img src={itemPhoto} alt="" /> : <div className="hint">{t.addPhotoHint}</div>}
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
-            </label>
-          </div>
-          <div>
-            <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.addReceiptLabel}</div>
-            <label className="drop">
-              {receiptPhoto ? <img src={receiptPhoto} alt="" /> : <div className="hint">{t.addReceiptHint}</div>}
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickReceipt} />
-            </label>
-          </div>
-        </div>
-        <button className="btn" onClick={analyze} disabled={aiLoading} style={{ marginTop: 20 }}>
-          {aiLoading ? t.analyzing : t.analyzeAI}
-        </button>
+        <label className="drop">
+          {itemPhoto ? <img src={itemPhoto} alt="" /> : <div className="hint">{t.addDropHint}</div>}
+          <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
+        </label>
         {error && <div className="msg msg-error">{error}</div>}
 
-        <div className="chip-row">
-          <button className="chip-outline" onClick={() => document.getElementById('gl-item-file')?.click()}>{t.chipPhoto}</button>
-          <button className="chip-outline" onClick={() => document.getElementById('gl-receipt-file')?.click()}>{t.chipReceipt}</button>
-          <button className="chip-outline" onClick={onSwitchToBulk}>{t.chipBulk}</button>
+        <div className="composer-actions">
+          <div className="chip-row" style={{ margin: 0 }}>
+            <button className="chip-outline" onClick={() => document.getElementById('gl-item-file')?.click()}>{t.chipPhoto}</button>
+            <button className={`chip-outline${receiptPhoto ? ' chip-filled' : ''}`} onClick={() => document.getElementById('gl-receipt-file')?.click()}>{t.chipReceipt}</button>
+            <button className="chip-outline" onClick={onSwitchToBulk}>{t.chipBulk}</button>
+          </div>
+          <button className="btn-ai" onClick={analyze} disabled={aiLoading}>
+            {aiLoading ? t.analyzing : t.analyzeAI}
+          </button>
         </div>
         <input id="gl-item-file" type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickItem} />
         <input id="gl-receipt-file" type="file" accept="image/*" style={{ display: 'none' }} onChange={onPickReceipt} />
@@ -165,7 +165,7 @@ export function SingleAddView({ supabase, lang, onSaved, onSwitchToBulk }) {
   );
 }
 
-export function BulkImportView({ supabase, lang, user, items, onSaved }) {
+export function BulkImportView({ supabase, lang, user, items, addMode, setAddMode, onSaved }) {
   const t = T[lang];
   const FIELD_LABELS = fieldLabels(t);
   const [step, setStep] = useState('upload');
@@ -275,6 +275,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
   if (step === 'upload') {
     return (
       <div className="card card-navy">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label" style={{ color: 'rgba(255,255,255,.75)' }}>{t.bulkTitle}</div>
         <label className="drop">
           <div className="hint">{fileName || t.bulkHint}</div>
@@ -291,6 +292,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
   if (step === 'map') {
     return (
       <div className="card card-white">
+        <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
         <div className="label">{t.matchColumns(fileName)}</div>
         <div className="grid2">
           {Object.keys(FIELD_LABELS).map(field => (
@@ -316,6 +318,7 @@ export function BulkImportView({ supabase, lang, user, items, onSaved }) {
 
   return (
     <div className="card card-white">
+      <ModeToggle t={t} addMode={addMode} setAddMode={setAddMode} />
       <div className="label">{t.checkAndEdit(includedCount, draftItems.length)}</div>
       {dupCount > 0 && (
         <div className="msg" style={{ background: 'var(--cream-card)', padding: '10px 14px', borderRadius: 10, marginBottom: 12 }}>
